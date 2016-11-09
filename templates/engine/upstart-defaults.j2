@@ -1,0 +1,9 @@
+
+DOCKER_OPTS="
+{%- for key, value in docker_engine_opts.iteritems() -%}
+{% for opt in value %} --{{ key }}={{ opt }}{% endfor %}
+{%- endfor -%}"
+
+{% for key, value in docker_engine_env_vars.iteritems() %}
+export {{key}}={{value}}
+{% endfor -%} 

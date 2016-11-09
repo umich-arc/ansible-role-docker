@@ -1,0 +1,31 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Bob Killen
+  description: Installs and Manages the Docker Engine. Has support for managing Commercial vs Open Source, Storage, Credentialing and more.
+  company: University of Michigan  
+  license: MIT
+  min_ansible_version: 2.2
+  platforms:
+  - name: Debian
+    versions:
+      - jessie
+  - name: EL
+    versions:
+    - 7
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+  
+  galaxy_tags:
+    - docker
+    - cloud
+    - system
+    - containers
+    - lvm
+    - devicemapper
+    - btrfs
+    - aufs
+    - overlayfs

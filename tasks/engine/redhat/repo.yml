@@ -1,0 +1,9 @@
+---
+
+- name: Add Docker Repo
+  template:
+    src: templates/engine/yum_docker_engine_repo.j2 
+    dest: /etc/yum.repos.d/Docker.repo 
+    owner: root
+    group: root 
+    mode: '0644'

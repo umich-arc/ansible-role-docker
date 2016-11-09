@@ -1,0 +1,4 @@
+---
+
+- name: Install docker-py package
+  package: name='{{ _docker_py_pkg[ansible_os_family|lower] }}' state=present

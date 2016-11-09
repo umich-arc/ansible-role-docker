@@ -1,0 +1,54 @@
+---
+
+# Docker Engine Repo
+# ------------------------------
+docker_engine_repo_cs_gpg_key: '0xEE6D536CF7DC86E2D7D56F59A178AC6C6238F52E'
+docker_engine_repo_os_gpg_key: '0x58118E89F3A912897C070ADBF76221572C52609D'
+
+
+# Docker Engine Storage
+# ------------------------------
+_docker_engine_storage_pkgs:
+  centos-7:
+    devicemapper: [ 'lvm2' ]
+    btrfs: [ 'btrfs-progs' ]
+    overlay: []
+  debian-8:
+    aufs: [ 'aufs-tools' ]
+    btrfs: [ 'btrfs-tools' ]
+    overlay: []
+  ubuntu-14:
+    aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
+    btrfs: [ 'btrfs-tools']
+  ubuntu-16:
+    aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
+    btrfs: [ 'btrfs-tools']
+    overlay: []
+
+_docker_engine_storage_defaults:
+  aufs:
+    graph: /var/lib/docker
+  btrfs:
+    graph: /var/lib/docker
+    mkfs_opts:
+    mount_opts: 'defaults'
+  devicemapper:
+    vg_name: docker-vg
+    vg_opts:
+    lv_name: thinpool
+    lv_data_opts: '--wipesignatures y'
+    lv_metadata_opts: '--wipesignatures y'
+    thinpool_autoextend_threshold: 80
+    thinpool_autoextend_percent: 20
+    data_share: 95
+    metadata_share: 1
+    storage_opts: [ 'dm.use_deferred_removal=true' ]
+  overlay:
+    graph: /var/lib/docker
+
+
+# Docker py
+# ------------------------------
+_docker_py_pkg:
+  redhat: python-docker-py
+  debian: python-docker

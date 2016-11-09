@@ -1,0 +1,9 @@
+/*.lock
+.bundle/
+.kitchen/
+.vagrant/
+vendor/
+*.junit.xml
+*.key
+*.pem
+*.swp

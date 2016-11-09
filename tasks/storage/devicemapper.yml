@@ -1,0 +1,72 @@
+---
+- fail: msg="No volume specified to manage. Devicemapper configuration cannot continue"
+  when: _des_config.device is undefined
+
+- name: Configure Volume Group
+  lvg:
+    pvs: '{{ _des_config.device }}'
+    vg: '{{ _des_config.vg_name }}'
+    vg_options: '{{ _des_config.vg_opts|default(omit) }}'
+  register: _des_vg
+
+- name: Configure Data Logical Volume
+  lvol:
+    lv: '{{ _des_config.lv_name }}'
+    vg: '{{ _des_config.vg_name }}'
+    size: '{{ _des_config.data_share }}%VG'
+    opts: '{{ _des_config.lv_data_opts }}'
+  when: _des_vg.changed
+  register: _des_lv_data
+
+- name: Configure Metaata Logical Volume
+  lvol:
+    lv: '{{ _des_config.lv_name }}_metadata'
+    vg: '{{ _des_config.vg_name }}'
+    size: '{{ _des_config.metadata_share }}%VG'
+    opts: '{{ _des_config.lv_metadata_opts }}'
+  register: _des_lv_metadata
+  when: _des_vg.changed
+
+- name: Convert Volume To Thinpool
+  command: >
+    lvconvert -y --zero n -c 512K
+    --thinpool '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
+    --poolmetadata '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}_metadata'
+  when: (_des_lv_data.changed) and (_des_lv_metadata.changed)
+
+- name: Create LVM Profile Directory
+  file: path=/etc/lvm/profile state=directory mode='0755'
+
+- name: Configure Thinpool Profile
+  template:
+    src: templates/storage/thinpool-profile.j2
+    dest: /etc/lvm/profile/docker-thinpool.profile
+    owner: root
+    group: root
+    mode: '0644'
+  register: _des_thinpool_profile
+
+- name: Configure Volume Metadata Profile
+  command: >
+    lvchange --metadataprofile docker-thinpool
+    '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
+  when: _des_thinpool_profile.changed
+
+- name: Set Thinpool Mapper Volume Name
+  set_fact:
+    _des_mapper_vg: "{{ _des_config.vg_name|regex_replace('-', '--') }}"
+    _des_mapper_lv: "{{ _des_config.lv_name|regex_replace('-', '--') }}"
+
+- name: Set Docker Thinpooldev
+  set_fact:
+    _des_thinpooldev: 'dm.thinpooldev=/dev/mapper/{{ _des_mapper_vg }}-{{ _des_mapper_lv }}'
+
+- name: Combine Devicemapper Configuration Options
+  set_fact:
+    _des_opts: "{{ [_des_thinpooldev] + _des_config['storage_opts'] }}"
+
+- name: Update Docker Engine Opts
+  set_fact:
+    docker_engine_opts: "{{ docker_engine_opts|combine(
+      {'storage-driver': ['devicemapper'], 'storage-opt': _des_opts}
+    ) }}"

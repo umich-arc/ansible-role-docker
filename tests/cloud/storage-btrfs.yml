@@ -1,0 +1,38 @@
+---
+- name: docker
+  hosts: all
+  connection: local
+  gather_facts: True
+  tags:
+   - 'docker'
+   - 'docker:storage'
+  roles:
+   - docker-engine
+  vars:
+    docker_manage_py: true
+    docker_engine_commercial_support: False
+    docker_engine_version: '1.12.3'
+    docker_manage_engine_storage: true
+    docker_engine_storage_driver: btrfs
+    docker_engine_storage_config:
+      device: /dev/xvdb
+    docker_engine_env_vars:
+      DOCKER_HOST: /var/run/docker.sock
+      TLS_VERIFY: TRUE
+    docker_engine_opts:
+      dns:
+        - '8.8.8.8'
+        - '8.8.4.4'
+    docker_images:
+      - name: nginx
+        tag: '1.10.1-alpine'
+    docker_containers:
+      - name: nginx
+        image: 'nginx:1.10.1-alpine'
+    docker_networks:
+      - name: testnet
+        driver_options:
+          com.docker.network.bridge.name: testnet1
+        ipam_options:
+          subnet: '10.255.13.1/24'
+          gateway: '10.255.13.1'

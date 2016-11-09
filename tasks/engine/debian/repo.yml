@@ -1,0 +1,49 @@
+---
+
+- name: Test if apt-transport-https is installed
+  command: dpkg-query -l apt-transport-https
+  register: prereq_ath
+  changed_when: prereq_ath.rc != 0
+  ignore_errors: True
+
+- name: Test if ca-certificates is installed
+  command: dpkg-query -l ca-certificates
+  register: prereq_cc
+  changed_when: prereq_cc.rc != 0
+  ignore_errors: True
+
+- name: Update Apt Cache
+  apt: update_cache=yes
+  when: (prereq_ath.rc != 0) or (prereq_cc.rc != 0)
+
+- name: Install Repo prereqs
+  apt: name='{{ item }}'
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+  when: (prereq_ath.rc != 0) or (prereq_cc.rc != 0)
+
+- name: Add Docker CS Repo GPG key
+  apt_key:
+    keyserver: '{{ docker_engine_repo_gpg_key_server }}'
+    id: '{{ docker_engine_repo_cs_gpg_key }}'
+  when: docker_engine_commercial_support|bool == true
+
+- name: Add Docker Open Source Repo GPG key
+  apt_key:
+    keyserver: '{{ docker_engine_repo_gpg_key_server }}'
+    id: '{{ docker_engine_repo_os_gpg_key }}'
+  when: not docker_engine_commercial_support|bool == true
+
+- name: Add Docker Repo
+  template:
+    src: templates/engine/apt_docker_engine_repo.j2
+    dest: /etc/apt/sources.list.d/docker.list
+    owner: root
+    group: root
+    mode: '0644'
+  register: update_apt_cache
+
+- name: Update Cache to Add Docker Repo
+  apt: update_cache=yes
+  when: update_apt_cache.changed

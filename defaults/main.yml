@@ -1,0 +1,187 @@
+---
+# defaults file for docker
+
+# ------------------------------
+# Execution Controls
+# ------------------------------
+#
+# docker_manage_containers:
+#
+# docker_manage_images:
+#
+# docker_manage_engine_repo: If managed, it will use the public repos for
+#   both the Open Source and Commercial Packages. Set to false if using an
+#   internal repo managed elsewhere.
+#
+# docker_manage_engine_storage: If managed, and  the settings in the storage
+#   block are defined. This will auto-configure the associated storage config
+#   (mainly for lvm).
+#
+# docker_manage_engine_users:
+#
+# docker_engine_networks_managed:
+#
+# docker_manage_py: If managed, this will install the docker-py libraries
+#   in a manner of your choosing. docker-py is required for credential
+#   management and many other ansible-docker related functionality.
+#
+# docker_manage_registry_credentials: If managed, this will enable the control
+#   registry authentication for specific users (defaults to current executing
+#   user).
+
+
+docker_manage_containers: True
+docker_manage_images: True
+docker_manage_engine_repo: True
+docker_manage_engine_storage: False
+docker_manage_engine_users: True
+docker_manage_engine_networks: True
+docker_manage_py: True
+docker_manage_registry_credentials: True
+
+
+
+# ------------------------------
+# docker-py configuration
+# ------------------------------
+#
+# docker_py_install:
+#   pkg: Install from distro package.
+#   pip: Install from pip. Will install pip if not found.
+# docker_py_pip_extra_args: extra args to pass to pip e.g. -i <index url>
+# docker_py_pip_upgrade: upgrade pip if possible before installing docker-py. There is a known
+#   issue with docker-py breaking pip under certain circumstances see -
+#   https://github.com/docker/docker-py/issues/525 for more info. Upgrading beforehand works
+#   around that.
+# docker_py_version: The version of the docker-py package to install. Only applicable if
+#   installed via pip.
+
+docker_py_install: pip
+docker_py_pip_extra_args:
+docker_py_pip_upgrade: true
+docker_py_version:
+
+# ------------------------------
+# Package and Repo Options
+# ------------------------------
+#
+# docker_engine_commercial_support: Use the Commercially Supported Docker
+#   Engine instead of Open Source.
+# docker_engine_repo_gpg_key_server: The keyserver to query the public gpg keys.
+# docker_engine_repo_cs_gpg_key: The gpg key used for the commercial docker Repo
+# docker_engine_repo_os_gpg_key: The gpg key used for the Open Source docker Repo
+
+docker_engine_commercial_support: False
+docker_engine_repo_gpg_key_server: sks-keyservers.net
+docker_engine_repo_cs_gpg_key: '0xEE6D536CF7DC86E2D7D56F59A178AC6C6238F52E'
+docker_engine_repo_os_gpg_key: '0x58118E89F3A912897C070ADBF76221572C52609D'
+
+
+# ------------------------------
+# Docker Engine Storage Options
+# ------------------------------
+# The storage-driver and storage-opt flags are controlled by this module and should
+# NOT be controlled manually.
+
+# aufs
+# --------------------
+# docker_engine_storage_driver: aufs
+# docker_engine_storage_config:
+#   graph: /var/lib/docker
+#   storage_opts: []
+#
+#
+#  btrfs:
+#    device: /dev/sdb
+#    graph: /var/lib/docker
+#    storage_opts: []
+#
+#
+#
+# devicemapper
+# --------------------
+# Required:
+#   device: the disk or partition to be used
+# Optional:
+#   vg_name: volume group name
+#   vg_opt: optional additional parameters to pass during vg creation
+#   lv_name: logical volume name
+#   lv_data_opts: optional additional parameters to pass during the data lv creation
+#   lv_metadata_opts: optional additional parameters to pass during the metadata lv creation
+#   thinpool_autoextend_threshold: Percent of disk used before triggering an autoextend
+#     event.
+#   thinpool_autoextend_percept: Amount of space that should be added to the LV when
+#     an autoextend event is triggered.
+#   data_share: Share of the volume to be used for data
+#   metadata_share: Share of the volume to be used for metadata
+#   storage_opts: Additonal storage parameters. They can be found here:
+#     https://docs.docker.com/engine/reference/commandline/daemon/#storage-driver-options
+# docker_engine_storage_driver: devicemapper
+# docker_engine_storage_config:
+#   vg_name: docker-vg
+#   lv_name: thinpool
+#   thinpool_autoextend_threshold: 80
+#   thinpool_autoextend_percent: 20
+#   data_share: 95
+#   metadata_share: 1
+#   storage_opts:
+#     - 'dm.use_deferred_removal=true'
+
+# overlay
+# --------------------
+# docker_engine_storage_driver: overlay
+# docker_engine_storage_config:
+#   graph: /var/lib/docker
+
+docker_engine_storage_config: {}
+
+
+
+# ------------------------------
+# Daemon configuration options
+# ------------------------------
+#
+# docker_engine_version: Docker engine version to install. If left blank, it will
+#   install the latest package available.
+# docker_engine_env_vars: The env vars is a simple hash of key:value pairs corresponding
+#   with their known environment variables. e.g. TLS_VERIFY or DOCKER_HOST.
+# docker_engine_opts: A hash of key:array. As options can be supplied more than once,
+#   ALL options must be supplied in this form. e.g.
+#   docker_engine_opts:
+#    dns: [ '8.8.8.8', 8.8.4.4 ]
+#    storage-driver: [ 'aufs' ]
+
+docker_engine_version:
+docker_engine_env_vars: {}
+docker_engine_opts: {}
+
+
+
+# ------------------------------
+# Docker Engine Users and Groups
+# ------------------------------
+#
+# docker_engine_users: An array of users that should be added to the Docker
+#   group.
+
+docker_engine_users: []
+
+
+
+# ------------------------------
+# Credential Configuration
+# ------------------------------
+#
+# docker_engine_credentials: An array of credential hashes for registries.
+# Fields allowed for each entry are:
+#  config_path: The path to the configuration file to generate
+#  email: The email address associated with the account (require for docker hub)
+#  password: The password for the associated account
+#  reauth: Trigger a reauth event and get a new api token
+#  registry: The registry url - defaults to docker hub
+#  timeout: The timeout of the connection
+#  tls_verify: Require verification of the server certs
+#  username: The username for the associated registry.
+
+
+docker_engine_credentials: []

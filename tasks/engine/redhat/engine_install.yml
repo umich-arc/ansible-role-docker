@@ -1,0 +1,34 @@
+---
+
+- name: Install Docker Engine
+  package: name='docker-engine-{{ docker_engine_version }}*' state=present
+  when: (docker_engine_version is defined) and (docker_engine_version is not none)
+
+- name: Install Latest Docker Engine
+  package: name='docker-engine' state=latest
+  when: (docker_engine_version is not defined) or (docker_engine_version is none)
+
+- name: Create Docker Systemd DropIn Directory
+  file: name='/etc/systemd/system/docker.service.d' state=directory recurse=yes
+
+- name: Create Docker Systemd DropIn
+  template:
+    src: templates/engine/systemd-config.j2
+    dest: /etc/systemd/system/docker.service.d/docker-opts.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: _docker_engine_cfg
+
+- name: Execute Systemd Daemon-Reload
+  command: systemctl daemon-reload
+  when: _docker_engine_cfg.changed
+
+- name: Start Docker Engine Service
+  service: name=docker enabled=true state=started
+  register: _docker_engine_svc
+  when: _docker_engine_cfg.changed
+
+- name: Restart Docker Engine Service
+  service: name=docker enabled=true state=restarted sleep=5
+  when: (_docker_engine_cfg.changed) and ( not _docker_engine_svc.changed)

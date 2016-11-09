@@ -1,0 +1,9 @@
+{%- if docker_engine_commercial_support -%}
+  {%- set version_split = docker_engine_version.split('.') -%}
+  {%- set repo_version = version_split[0] ~ '.' ~ version_split[1] -%}
+  {%- set repo = 'https://packages.docker.com/' ~ repo_version ~ '/apt/repo' -%}
+{%- else -%}
+  {%- set repo = 'https://apt.dockerproject.org/repo' -%}
+{%- endif -%}
+
+deb {{ repo }} {{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }} main

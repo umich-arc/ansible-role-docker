@@ -1,0 +1,21 @@
+---
+- name: docker
+  hosts: all
+  connection: local
+  gather_facts: True
+  tags:
+   - 'docker'
+  roles:
+    - docker-engine
+  vars:
+    docker_engine_commercial_support: false
+    docker_manage_py: true
+    docker_py_install: pkg
+    docker_engine_version: '1.12.3'
+    docker_engine_env_vars:
+      DOCKER_HOST: /var/run/docker.sock
+      TLS_VERIFY: TRUE
+    docker_engine_opts:
+      dns:
+        - '8.8.8.8'
+        - '8.8.4.4'

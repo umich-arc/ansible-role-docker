@@ -1,0 +1,51 @@
+---
+
+- name: Install Docker Engine
+  package: name='docker-engine={{ docker_engine_version }}*' state=present
+  when: (docker_engine_version is defined) and (docker_engine_version is not none)
+
+- name: Install Latest Docker Engine
+  package: name='docker-engine' state=latest
+  when: (docker_engine_version is not defined) or (docker_engine_version is none)
+
+# Upstart (Ubuntu 14.04)
+
+- name: Create Docker Upstart Defaults
+  template:
+    src: templates/engine/upstart-defaults.j2
+    dest: /etc/default/docker
+    owner: root
+    group: root
+    mode: '0644'
+  register: _docker_engine_upstart_cfg
+  when: ansible_service_mgr == "upstart"
+
+# Systemd (Debian Jessie, Ubuntu 16.04)
+
+- name: Create Docker Systemd DropIn Directory
+  file: name='/etc/systemd/system/docker.service.d' state=directory recurse=yes
+  when: ansible_service_mgr == "systemd"
+
+- name: Create Docker Systemd DropIn
+  template:
+    src: templates/engine/systemd-config.j2
+    dest: /etc/systemd/system/docker.service.d/docker-opts.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: _docker_engine_systemd_cfg
+  when: ansible_service_mgr == 'systemd'
+
+- name: Execute Systemd Daemon-Reload
+  command: systemctl daemon-reload
+  when: _docker_engine_systemd_cfg.changed
+
+- name: Start Docker Engine Service
+  service: name=docker enabled=true state=started
+  register: _docker_engine_svc
+  when: (_docker_engine_upstart_cfg.changed) or (_docker_engine_systemd_cfg.changed)
+
+- name: Restart Docker Engine Service
+  service: name=docker enabled=true state=restarted sleep=5
+  when: (_docker_engine_upstart_cfg.changed or _docker_engine_systemd_cfg.changed) and
+        (not _docker_engine_svc.changed)

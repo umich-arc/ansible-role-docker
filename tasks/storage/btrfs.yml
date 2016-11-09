@@ -1,0 +1,44 @@
+---
+
+- fail: msg="No volume specified to manage. Btrfs configuration cannot continue"
+  when: _des_config.device is undefined
+
+- name: Create btrfs Volume
+  filesystem:
+    dev: '{{ _des_config.device }}'
+    fstype: btrfs
+    opts: '{{ _des_config.mkfs_opts|default(omit) }}'
+  register: _des_volume_created
+
+- name: Get Volume UUID
+  command: blkid -s UUID -o value '{{ _des_config.device }}'
+  register: _des_volume_uuid
+  when: _des_volume_created.changed
+
+- name: Create Docker Engine Graph Directory
+  file: name='{{ _des_config.graph }}' state=directory owner=root group=root mode='0711'
+  when: _des_volume_created.changed
+
+# defaulting to '' for _des_volume_uuid is not ideal...but otherwise it'll throw an error about
+# stdout being undefined, even when the item is being skipped.
+- name: Mount btrfs Volume as Graph Directory and Update fstab
+  mount:
+    name: '{{ _des_config.graph }}'
+    src: "UUID={{ _des_volume_uuid.stdout|default('')|trim }}"
+    fstype: 'btrfs'
+    opts: '{{ _des_config.mount_opts }}'
+    state: mounted
+  when: (_des_volume_created.changed) and (_des_volume_created is defined)
+
+- name: Update Docker Engine Opts With btrfs Options
+  set_fact:
+    docker_engine_opts: "{{ docker_engine_opts|combine(
+      {'storage-driver': ['btrfs'], 'graph': [_des_config.graph]}
+    ) }}"
+
+- name: Update Docker Engine Opts with Additional Storage Opts
+  set_fact:
+    docker_engine_opts: "{{ docker_engine_opts|combine(
+      {'storage-opt': [_des_config.storage_opts]}
+    ) }}"
+  when: _des_config.storage_opts is defined
