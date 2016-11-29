@@ -98,7 +98,7 @@ namespace :integration do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
       config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
       concurrency = (ENV['concurrency'] || '10').to_i
-      task_runner(config, '.*', 'test', concurrency)
+      task_runner(config, '.', 'test', concurrency)
     end
 
     namespace :cloud do
@@ -143,7 +143,7 @@ namespace :integration do
 
       desc 'Destroy all Cloud instances.'
       task :destroy do
-        task_runner(config, '.*', 'destroy', concurrency)
+        task_runner(config, '.', 'destroy', concurrency)
       end
 
       desc 'Destroys ALL cloud instances and volumes in the security group.'
