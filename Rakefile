@@ -35,14 +35,14 @@ namespace :integration do
   end
 
   Kitchen.logger = Kitchen.default_file_logger
-  @log_level = ENV['KITCHEN_LOG'].to_sym || :info
+  @log_level = (ENV['KITCHEN_LOG'] || 'info').to_sym
 
   desc 'Execute all test suites using the Vagrant Provider'
   task :vagrant do
     @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.yml')
     config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
     concurrency = (ENV['concurrency'] || '1').to_i
-    task_runner(config, '.*', 'test', concurrency)
+    task_runner(config, '.', 'test', concurrency)
   end
 
   namespace :vagrant do
@@ -87,7 +87,7 @@ namespace :integration do
 
     desc 'Destroy all Vagrant instances.'
     task :destroy do
-      task_runner(config, '.*', 'destroy', concurrency)
+      task_runner(config, '.', 'destroy', concurrency)
     end
   end
 
