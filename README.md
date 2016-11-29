@@ -2,6 +2,7 @@
 
 This role manages the install and configuration of the Docker Engine with support for credential management and custom storage provisioning. It has been tested with CentOS 7.2, Debian Jessie, Ubuntu Trusty, and Ubuntu Xenial.
 
+[![Build Status](https://travis-ci.org/arc-ts/ansible-role-docker.svg?branch=master)](https://travis-ci.org/arc-ts/ansible-role-docker)
 
 
 # Index

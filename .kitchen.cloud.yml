@@ -11,11 +11,17 @@ driver:
   require_chef_omnibus: false
   tags:
     'ansible-role': ansible-role-docker
+<% if ENV['AWS_SUBNET'] %>
+  subnet_id: <%= ENV['AWS_SUBNET'] %>
+<% end %>
+<% if ENV['AWS_IAM_PROFILE'] %>
+  iam_profile_name: <%= ENV['AWS_IAM_PROFILE'] %>
+<% end %>
 
 
 transport:
   ssh_key: <%= ENV['KITCHEN_SSH_KEY'] %>
-  connection_timeout: 60
+  connection_timeout: 120
   connection_retries: 10
   max_ssh_sessions: 4
 
@@ -32,18 +38,17 @@ provisioner:
   ansible_verbosity: warn
   idempotency_test: true
 
+
 verifier:
   name: shell
 
-
-# KITCHEN_SSH_KEY must be set manually as it is not passed during the verification step
 
 suites:
   - name: os-engine
     provisioner:
       playbook: tests/cloud/os-engine.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/os-engine.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/os-engine.yml bundle exec rspec -c -f d -I serverspec
 
   - name: cs-engine
     excludes:
@@ -52,7 +57,7 @@ suites:
     provisioner:
       playbook: tests/cloud/cs-engine.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/cs-engine.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/cs-engine.yml bundle exec rspec -c -f d -I serverspec
 
   - name: py-pkg
     excludes:
@@ -60,7 +65,7 @@ suites:
     provisioner:
       playbook: tests/cloud/py-pkg.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/py-pkg.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/py-pkg.yml bundle exec rspec -c -f d -I serverspec
 
   - name: storage-aufs
     excludes:
@@ -68,7 +73,7 @@ suites:
     provisioner:
       playbook: tests/cloud/storage-aufs.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/storage-aufs.yml bundle exec rspec -c  -I serverspec
+      command: PLAYBOOK=tests/cloud/storage-aufs.yml bundle exec rspec -c  -I serverspec
 
   - name: storage-btrfs
     driver:
@@ -81,7 +86,7 @@ suites:
     provisioner:
       playbook: tests/cloud/storage-btrfs.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/storage-btrfs.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/storage-btrfs.yml bundle exec rspec -c -f d -I serverspec
 
   - name: storage-devicemapper
     excludes:
@@ -98,7 +103,7 @@ suites:
     provisioner:
       playbook: tests/cloud/storage-devicemapper.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/storage-devicemapper.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/storage-devicemapper.yml bundle exec rspec -c -f d -I serverspec
 
 
   - name: storage-overlay
@@ -108,8 +113,7 @@ suites:
     provisioner:
       playbook: tests/cloud/storage-overlay.yml
     verifier:
-      command: KITCHEN_SSH_KEY=<%= ENV['KITCHEN_SSH_KEY'] %> PLAYBOOK=tests/cloud/storage-overlay.yml bundle exec rspec -c -f d -I serverspec
-
+      command: PLAYBOOK=tests/cloud/storage-overlay.yml bundle exec rspec -c -f d -I serverspec
 
 
 # Default for centos-7 image is to persist the root volume.
