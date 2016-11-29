@@ -10,7 +10,7 @@ task default: 'test:vagrant'
 
 def task_runner(config, suite_name, action, concurrency) # rubocop:disable Metrics/MethodLength
   task_queue = Queue.new
-  instances = config.instances.select { |obj| obj.suite.name =~ /^#{suite_name}$/ }
+  instances = config.instances.select { |obj| obj.suite.name =~ /^#{suite_name}*/ }
   instances.each { |i| task_queue << i }
   workers = (0...concurrency).map do
     Thread.new do
@@ -35,18 +35,19 @@ namespace :integration do
   end
 
   Kitchen.logger = Kitchen.default_file_logger
+  @log_level = ENV['KITCHEN_LOG'].to_sym || :info
 
   desc 'Execute all test suites using the Vagrant Provider'
   task :vagrant do
     @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.yml')
-    config = Kitchen::Config.new(loader: @loader)
+    config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
     concurrency = (ENV['concurrency'] || '1').to_i
     task_runner(config, '.*', 'test', concurrency)
   end
 
   namespace :vagrant do
     @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.yml')
-    config = Kitchen::Config.new(loader: @loader)
+    config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
     concurrency = (ENV['concurrency'] || '1').to_i
 
     desc 'Execute the Vagrant test suite for the Open Source Docker Engine.'
@@ -95,14 +96,14 @@ namespace :integration do
     desc 'Execute all test suites using the Cloud Provider'
     task :cloud do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
-      config = Kitchen::Config.new(loader: @loader)
+      config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
       concurrency = (ENV['concurrency'] || '10').to_i
       task_runner(config, '.*', 'test', concurrency)
     end
 
     namespace :cloud do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
-      config = Kitchen::Config.new(loader: @loader)
+      config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
       concurrency = (ENV['concurrency'] || '10').to_i
 
       desc 'Execute the Cloud test suite for the Open Source Docker Engine.'
