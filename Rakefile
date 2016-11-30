@@ -97,14 +97,14 @@ namespace :integration do
     task :cloud do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
       config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
-      concurrency = (ENV['concurrency'] || '10').to_i
+      concurrency = (ENV['concurrency'] || '8').to_i
       task_runner(config, '.', 'test', concurrency)
     end
 
     namespace :cloud do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
       config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
-      concurrency = (ENV['concurrency'] || '10').to_i
+      concurrency = (ENV['concurrency'] || '8').to_i
 
       desc 'Execute the Cloud test suite for the Open Source Docker Engine.'
       task :'os-engine' do
