@@ -38,7 +38,8 @@ docker_manage_engine_users: True
 docker_manage_engine_networks: True
 docker_manage_py: True
 docker_manage_registry_credentials: True
-
+pkg_retries: 5
+pkg_delay: 20
 
 
 # ------------------------------

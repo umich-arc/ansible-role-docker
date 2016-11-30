@@ -2,3 +2,7 @@
 
 - name: Install docker-py package
   package: name='{{ _docker_py_pkg[ansible_os_family|lower] }}' state=present
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'

@@ -2,10 +2,18 @@
 
 - name: Install Docker Engine
   package: name='docker-engine-{{ docker_engine_version }}*' state=present
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: (docker_engine_version is defined) and (docker_engine_version is not none)
 
 - name: Install Latest Docker Engine
   package: name='docker-engine' state=latest
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: (docker_engine_version is not defined) or (docker_engine_version is none)
 
 - name: Create Docker Systemd DropIn Directory

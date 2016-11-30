@@ -14,10 +14,18 @@
 
 - name: Update Apt Cache
   apt: update_cache=yes
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: (prereq_ath.rc != 0) or (prereq_cc.rc != 0)
 
 - name: Install Repo prereqs
   apt: name='{{ item }}'
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   with_items:
     - apt-transport-https
     - ca-certificates
@@ -27,12 +35,20 @@
   apt_key:
     keyserver: '{{ docker_engine_repo_gpg_key_server }}'
     id: '{{ docker_engine_repo_cs_gpg_key }}'
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: docker_engine_commercial_support|bool == true
 
 - name: Add Docker Open Source Repo GPG key
   apt_key:
     keyserver: '{{ docker_engine_repo_gpg_key_server }}'
     id: '{{ docker_engine_repo_os_gpg_key }}'
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: not docker_engine_commercial_support|bool == true
 
 - name: Add Docker Repo
@@ -46,4 +62,8 @@
 
 - name: Update Cache to Add Docker Repo
   apt: update_cache=yes
+  register: _pkg_success
+  until: _pkg_success|success
+  retries: '{{ pkg_retries }}'
+  delay: '{{ pkg_delay }}'
   when: update_apt_cache.changed
