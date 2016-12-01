@@ -50,6 +50,11 @@ namespace :integration do
     config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
     concurrency = (ENV['concurrency'] || '1').to_i
 
+    desc 'Execute the Vagrant test suite for the latest version of Docker Engine and docker-py.'
+    task :latest do
+      task_runner(config, 'latest', 'test', concurrency)
+    end
+
     desc 'Execute the Vagrant test suite for the Open Source Docker Engine.'
     task :'os-engine' do
       task_runner(config, 'os-engine', 'test', concurrency)
@@ -105,6 +110,11 @@ namespace :integration do
       @loader = Kitchen::Loader::YAML.new(local_config: '.kitchen.cloud.yml')
       config = Kitchen::Config.new(loader: @loader, log_level: @log_level)
       concurrency = (ENV['concurrency'] || '8').to_i
+
+      desc 'Execute the Cloud test suite for the latest version of Docker Engine and docker-py.'
+      task :latest do
+        task_runner(config, 'latest', 'test', concurrency)
+      end
 
       desc 'Execute the Cloud test suite for the Open Source Docker Engine.'
       task :'os-engine' do

@@ -2,13 +2,14 @@
 - name: docker
   hosts: all
   connection: local
-  gather_facts: True
+  gather_facts: true
   roles:
     - docker-engine
   tags:
-   - 'docker'
+    - 'docker'
   vars:
     docker_manage_py: true
+    docker_py_version: '1.10.6'
     docker_engine_commercial_support: True
     docker_engine_version: '1.12.3'
     docker_engine_env_vars:
@@ -24,10 +25,10 @@
       - vagrant
     docker_images:
       - name: nginx
-        tag: '1.10.1-alpine'
+        tag: 'stable-alpine'
     docker_containers:
       - name: nginx
-        image: 'nginx:1.10.1-alpine'
+        image: 'nginx:stable-alpine'
     docker_networks:
       - name: testnet
         driver_options:

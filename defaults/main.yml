@@ -5,9 +5,18 @@
 # Execution Controls
 # ------------------------------
 #
-# docker_manage_containers:
+# external_dependency_delay: The time in seconds between external dependency retries.
+#   An external dependency is any link, package, cache etc that is to be fetched or
+#   updated.
 #
-# docker_manage_images:
+# external_dependency_retries: The number of retries to attempt to query an external
+#   dependnecy.
+#
+# docker_manage_containers: If true, the role will attempt to manage the containers
+#   on the host via the docker_containers array.
+#
+# docker_manage_images: If true, the role will manage images on the host via the
+#   docker_images array.
 #
 # docker_manage_engine_repo: If managed, it will use the public repos for
 #   both the Open Source and Commercial Packages. Set to false if using an
@@ -17,9 +26,11 @@
 #   block are defined. This will auto-configure the associated storage config
 #   (mainly for lvm).
 #
-# docker_manage_engine_users:
+# docker_manage_engine_users: If true, the role will attempt to manage the users
+#   who are a member of the docker group, allowing access to the docker engine.
 #
-# docker_engine_networks_managed:
+# docker_engine_networks_managed: If true, the role will attempt to manage the
+#   container networks on the host via the docker_networks array.
 #
 # docker_manage_py: If managed, this will install the docker-py libraries
 #   in a manner of your choosing. docker-py is required for credential
@@ -29,7 +40,8 @@
 #   registry authentication for specific users (defaults to current executing
 #   user).
 
-
+external_dependency_delay: 20
+external_dependency_retries: 6
 docker_manage_containers: True
 docker_manage_images: True
 docker_manage_engine_repo: True
@@ -38,8 +50,6 @@ docker_manage_engine_users: True
 docker_manage_engine_networks: True
 docker_manage_py: True
 docker_manage_registry_credentials: True
-pkg_retries: 5
-pkg_delay: 20
 
 
 # ------------------------------

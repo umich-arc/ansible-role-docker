@@ -1,4 +1,7 @@
 ---
+# External_dependency management is NOT handled in this section as container
+# execution covers a very broad spectrum. Images should be pulled through
+# container_images before running in this section.
 
 - name: Manage Container Exeuction
   docker_container:
