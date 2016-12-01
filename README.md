@@ -49,8 +49,10 @@ Role Variables
 Enables or disables specific components of the Docker Role.
 
 |             Variable Name            | Default |                                                                  Description                                                                 |
-|:------------------------------------:|--------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|
-|          `docker_manage_py`          |  `true` |                      Installs docker-py, either from repo or pip. **Note:** This is required for credential management.                      |
+|:------------------------------------:|:-------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|
+|      `external_dependency_delay`     |   `20`  |                               The time in seconds between external dependency retries. (repos, keyservers, etc)                              |
+|     `external_dependency_retries`    |   `6`   |                                      The number of retries to attempt accessing an external dependency.                                      |
+|          `docker_manage_py`          |  `true` |       Installs docker-py, either from repo or pip. **Note:** This is required for container, credential, image and network management.       |
 |      `docker_manage_engine_repo`     |  `true` |                  Manages the Docker repo. Provides support for both the Open Source and Commercially Supported Repositories.                 |
 |    `docker_manage_engine_storage`    | `false` | If true, the storage driver for the Docker Engine will be managed by the role. No storage-driver or storage-opt should be supplied manually. |
 |     `docker_manage_engine_users`     |  `true` |                              Creates and manages a docker group that is granted rights to interact with Docker.                              |

@@ -11,6 +11,10 @@
 
 - name: Install pip
   easy_install: name=pip state=present
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (_pip_installed.rc != 0)
 
 - name: Check if pip is Up to Date
@@ -22,30 +26,46 @@
 
 - name: Upgrade pip
   pip: name=pip state=latest extra_args='{{ docker_py_pip_extra_args|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: ((_pip_outdated.rc | default('1')) == 0) and (docker_py_pip_upgrade|bool == true)
 
 # This is a workaround for a known issue when installing certain packages
 # on debian based distros: https://bugs.launchpad.net/ubuntu/+source/python-pip/+bug/1306991
 - name: Install docker-py Prereqs
-  pip: 
+  pip:
     name: 'requests>=2.3.0'
-    state: present 
-    umask: '0022' 
+    state: present
+    umask: '0022'
     extra_args: '{{ docker_py_pip_extra_args|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: _pip_installed.rc != 0
 
 - name: pip Install docker-py
-  pip: 
-    name: "'docker-py=={{ docker_py_version }}'" 
-    state: present 
-    umask: '0022' 
+  pip:
+    name: "'docker-py=={{ docker_py_version }}'"
+    state: present
+    umask: '0022'
     extra_args: '{{ docker_py_pip_extra_args|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (docker_py_version is defined) and (docker_py_version is not none)
 
 - name: pip Install or Upgrade docker-py
-  pip: 
-    name: docker-py 
-    state: latest 
-    umask: '0022' 
+  pip:
+    name: docker-py
+    state: latest
+    umask: '0022'
     extra_args: '{{ docker_py_pip_extra_args|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (docker_py_version is not defined) or (docker_py_version is none)

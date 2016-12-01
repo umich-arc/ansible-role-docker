@@ -7,13 +7,8 @@
     - docker-engine
   tags:
     - 'docker'
-    - 'docker:storage'
   vars:
     docker_manage_py: true
-    docker_py_version: '1.10.6'
-    docker_engine_version: '1.12.3'
-    docker_manage_engine_storage: true
-    docker_engine_storage_driver: aufs
     docker_engine_env_vars:
       DOCKER_HOST: /var/run/docker.sock
       TLS_VERIFY: TRUE
@@ -21,6 +16,10 @@
       dns:
         - '8.8.8.8'
         - '8.8.4.4'
+      bip:
+        - '10.255.12.1/24'
+    docker_engine_users:
+      - vagrant
     docker_images:
       - name: nginx
         tag: 'stable-alpine'

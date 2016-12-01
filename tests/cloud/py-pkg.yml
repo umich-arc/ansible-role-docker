@@ -2,13 +2,12 @@
 - name: docker
   hosts: all
   connection: local
-  gather_facts: True
-  tags:
-   - 'docker'
+  gather_facts: true
   roles:
     - docker-engine
+  tags:
+    - 'docker'
   vars:
-    docker_engine_commercial_support: false
     docker_manage_py: true
     docker_py_install: pkg
     docker_engine_version: '1.12.3'

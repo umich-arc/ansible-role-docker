@@ -13,9 +13,12 @@
 
 - name: Install Storage Prereqs
   package: name='{{ item }}' state=present
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   with_items: '{{ _des_pkgs|default([]) }}'
 
 - name: Config Storage Driver
   include: '{{ docker_engine_storage_driver|lower }}.yml'
   when: docker_engine_storage_driver is defined
-

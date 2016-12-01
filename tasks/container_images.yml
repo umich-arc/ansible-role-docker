@@ -1,4 +1,6 @@
 ---
+# External dependency management IS done here as this is mostly used
+# for pulling and not building images.
 
 - name: Manage Container Images
   docker_image:
@@ -34,4 +36,8 @@
     tls_client_key: '{{ item.tls_client_key|default(omit) }}'
     tls_hostname: '{{ item.tls_hostname|default(omit) }}'
     tls_verify: '{{ item.tls_verify|default(omit) }}'
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   with_items: '{{ docker_images|default([]) }}'

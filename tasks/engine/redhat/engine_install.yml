@@ -2,10 +2,18 @@
 
 - name: Install Docker Engine
   package: name='docker-engine-{{ docker_engine_version }}*' state=present
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (docker_engine_version is defined) and (docker_engine_version is not none)
 
 - name: Install Latest Docker Engine
   package: name='docker-engine' state=latest
+  register: _external_dependency_success
+  until: _external_dependency_success|success
+  retries: '{{ external_dependency_retries }}'
+  delay: '{{ external_dependency_delay }}'
   when: (docker_engine_version is not defined) or (docker_engine_version is none)
 
 - name: Create Docker Systemd DropIn Directory
