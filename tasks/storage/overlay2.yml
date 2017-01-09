@@ -1,0 +1,14 @@
+---
+
+- name: Update Docker Engine Opts with overlay2 Options
+  set_fact:
+    docker_engine_opts: "{{ docker_engine_opts|combine(
+      {'storage-driver': ['overlay2'],  'graph': [_des_config['graph']]}
+    ) }}"
+
+- name: Update Docker Engine Opts with Additional Storage Opts
+  when: _des_config.storage_opts is defined
+  set_fact:
+    docker_engine_opts: "{{ docker_engine_opts|combine(
+     {'storage-opt': [_des_config.storage_opts]}
+    ) }}"

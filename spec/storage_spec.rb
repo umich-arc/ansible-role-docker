@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 # frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 
 require 'deep_merge'
 require 'spec_helper'
@@ -82,7 +83,18 @@ if property['docker_manage_engine_storage'] == true && property['docker_engine_s
           end
         end
 
+      when 'overlay2'
+        context 'DOCKER:STORAGE:OVERLAY' do
+          describe 'The docker daemon' do
+            subject { process('dockerd') }
+            its(:args) { is_expected.to match '--storage-driver=overlay2' }
+            its(:args) { is_expected.to match "--graph=#{des_config['graph']}" }
+          end
+        end
+
       end
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength

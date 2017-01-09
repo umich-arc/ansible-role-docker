@@ -152,6 +152,15 @@ suites:
     verifier:
       command: PLAYBOOK=tests/cloud/storage-overlay.yml bundle exec rspec -c -f d -I serverspec
 
+  - name: storage-overlay-2
+    excludes:
+      - debian-8
+      - ubuntu-14.04
+      - centos-7
+    provisioner:
+      playbook: tests/cloud/storage-overlay-2.yml
+    verifier:
+      command: PLAYBOOK=tests/cloud/storage-overlay-2.yml bundle exec rspec -c -f d -I serverspec
 
 # Default for centos-7 image is to persist the root volume.
 # The below overrides that.
