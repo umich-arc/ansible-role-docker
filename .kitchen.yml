@@ -102,14 +102,24 @@ suites:
     verifier:
       command: PLAYBOOK=tests/vagrant/storage-devicemapper.yml bundle exec rspec -c -f d -I serverspec
 
-  - name: storage-overlay
+  - name: storage-legacy-overlay
     excludes:
       - ubuntu-1404
       - debian-8
     provisioner:
-      playbook: tests/vagrant/storage-overlay.yml
+      playbook: tests/vagrant/storage-legacy-overlay.yml
     verifier:
-      command: PLAYBOOK=tests/vagrant/storage-overlay.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/vagrant/storage-legacy-overlay.yml bundle exec rspec -c -f d -I serverspec
+
+  - name: storage-overlay2
+    excludes:
+      - ubuntu-1404
+      - debian-8
+      - centos-7
+    provisioner:
+      playbook: tests/vagrant/storage-overlay2.yml
+    verifier:
+      command: PLAYBOOK=tests/vagrant/storage-overlay2.yml bundle exec rspec -c -f d -I serverspec
 
 
 platforms:
@@ -120,8 +130,8 @@ platforms:
 
   - name: debian-8
     driver_config:
-      box: bento/debian-8.4
-      box_url: https://atlas.hashicorp.com/bento/debian-8.4
+      box: bento/debian-8.6
+      box_url: https://atlas.hashicorp.com/bento/debian-8.6
 
   - name: ubuntu-1404
     driver_config:

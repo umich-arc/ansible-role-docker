@@ -16,7 +16,6 @@ _docker_engine_storage_pkgs:
   debian-8:
     aufs: [ 'aufs-tools' ]
     btrfs: [ 'btrfs-tools' ]
-    overlay: []
   ubuntu-14:
     aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
     btrfs: [ 'btrfs-tools']
@@ -24,6 +23,7 @@ _docker_engine_storage_pkgs:
     aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
     btrfs: [ 'btrfs-tools']
     overlay: []
+    overlay2: []
 
 _docker_engine_storage_defaults:
   aufs:
@@ -45,7 +45,8 @@ _docker_engine_storage_defaults:
     storage_opts: [ 'dm.use_deferred_removal=true' ]
   overlay:
     graph: /var/lib/docker
-
+  overlay2:
+    graph: /var/lib/docker
 
 # Docker py
 # ------------------------------

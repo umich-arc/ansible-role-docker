@@ -103,12 +103,12 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 
 **Storage Support Matrix:**
 
-|                           | aufs | btrfs | devicemapper (lvm-direct) | overlay |
-|:-------------------------:|:----:|:-----:|:-------------------------:|:-------:|
-|       **CentOS 7.2**      |   -  |   x   |             x             |    x    |
-|   **Debian 8 (Jessie)**   |   x  |   x   |             -             |    -    |
-| **Ubuntu 14.04 (Trusty)** |   x  |   x   |             -             |    -    |
-| **Ubuntu 16.04 (Xenial)** |   x  |   x   |             -             |    x    |
+|                           | aufs | btrfs | devicemapper (lvm-direct) | overlay | overlay2 |
+|:-------------------------:|:----:|:-----:|:-------------------------:|:-------:|:--------:|
+|       **CentOS 7.2**      |   -  |   x   |             x             |    x    |     -    |
+|   **Debian 8 (Jessie)**   |   x  |   x   |             -             |    -    |     -    |
+| **Ubuntu 14.04 (Trusty)** |   x  |   x   |             -             |    -    |     -    |
+| **Ubuntu 16.04 (Xenial)** |   x  |   x   |             -             |    x    |     x    |
 
 
 |          Variable Name         | Default |                     Options                    |                                         Description                                         |
@@ -158,6 +158,13 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 |          Variable Name         |      Default      |                    Description                     |
 |:------------------------------:|:-----------------:|:--------------------------------------------------:|
 | `docker_engine_storage_driver` |     `overlay`     |                     -                              |
+|             `graph`            | `/var/lib/docker` | The root directory of the docker runtime           |
+|         `storage_opts`         |         -         | Optional Storage Opts to pass to the Docker Daemon |
+
+#### overlay2
+|          Variable Name         |      Default      |                    Description                     |
+|:------------------------------:|:-----------------:|:--------------------------------------------------:|
+| `docker_engine_storage_driver` |     `overlay2`    |                     -                              |
 |             `graph`            | `/var/lib/docker` | The root directory of the docker runtime           |
 |         `storage_opts`         |         -         | Optional Storage Opts to pass to the Docker Daemon |
 
@@ -262,7 +269,7 @@ A variety of examples may be found in the tests directory.
     docker_manage_engine_repo: true
     docker_manage_engine_storage: true
     docker_manage_engine_users: true
-    docker_engine_credentials_managed: true
+    docker_manage_registry_credentials: true
     docker_manage_images: true
     docker_manage_containers: true
     docker_engine_version: '1.12.1'
