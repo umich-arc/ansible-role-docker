@@ -86,13 +86,13 @@ namespace :integration do
     end
 
     desc 'Execute the Vagrant test suite using the overlay storage driver.'
-    task :'storage-overlay' do
-      task_runner(config, 'storage-overlay', 'test', concurrency)
+    task :'storage-legacy-overlay' do
+      task_runner(config, 'storage-legacy-overlay', 'test', concurrency)
     end
 
     desc 'Execute the Vagrant test suite using the overlay2 storage driver.'
-    task :'storage-overlay-2' do
-      task_runner(config, 'storage-overlay-2', 'test', concurrency)
+    task :'storage-overlay2' do
+      task_runner(config, 'storage-overlay2', 'test', concurrency)
     end
 
     desc 'Destroy all Vagrant instances.'
@@ -152,13 +152,13 @@ namespace :integration do
       end
 
       desc 'Execute the Cloud test suite using the overlay storage driver.'
-      task :'storage-overlay' do
-        task_runner(config, 'storage-overlay', 'test', concurrency)
+      task :'storage-legacy-overlay' do
+        task_runner(config, 'storage-legacy-overlay', 'test', concurrency)
       end
 
       desc 'Execute the Cloud test suite using the overlay-2 storage driver.'
-      task :'storage-overlay-2' do
-        task_runner(config, 'storage-overlay-2', 'test', concurrency)
+      task :'storage-overlay2' do
+        task_runner(config, 'storage-overlay2', 'test', concurrency)
       end
 
       desc 'Destroy all Cloud instances.'

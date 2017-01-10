@@ -269,7 +269,7 @@ A variety of examples may be found in the tests directory.
     docker_manage_engine_repo: true
     docker_manage_engine_storage: true
     docker_manage_engine_users: true
-    docker_engine_credentials_managed: true
+    docker_manage_registry_credentials: true
     docker_manage_images: true
     docker_manage_containers: true
     docker_engine_version: '1.12.1'
