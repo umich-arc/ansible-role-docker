@@ -1,6 +1,6 @@
 ---
 
-- name: Manage Container Networks
+- name: NETWORKS - Manage Container Networks
   docker_network:
     api_version: '{{ item.api_version|default(omit) }}'
     appends: '{{ item.appends|default(omit) }}'

@@ -1,12 +1,12 @@
 ---
 
-- name: Update Docker Engine Opts With aufs Storage Opts
+- name: STORAGE - AUFS - Update Docker Engine Opts With aufs Storage Opts
   set_fact:
     docker_engine_opts: "{{ docker_engine_opts|combine(
       {'storage-driver': ['aufs'], 'graph': [_des_config['graph']]}
     ) }}"
 
-- name: Update Docker Engine Opts with Additional Storage Opts
+- name: STORAGE - AUFS - Update Docker Engine Opts with Additional Storage Opts
   set_fact:
     docker_engine_opts: "{{ docker_engine_opts|combine(
       {'storage-opt': [_des_config.storage_opts]}
