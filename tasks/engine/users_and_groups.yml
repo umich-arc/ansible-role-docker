@@ -1,8 +1,8 @@
 ---
 
-- name: Create Docker Engine Group
+- name: INSTALL - USERS - Create Docker Engine Group
   group: name=docker system=yes state=present
 
-- name: Add Users to Docker Engine group
+- name: INSTALL - USERS - Add Users to Docker Engine group
   user: name='{{ item }}' append=yes groups=docker state=present
   with_items: '{{ docker_engine_users|default([]) }}'

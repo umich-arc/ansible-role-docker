@@ -1,41 +1,40 @@
 ---
-# tasks file for docker
 
-- name: Configure Docker Engine Storage
+- name: MAIN - Configure Docker Engine Storage
   include: 'storage/main.yml'
   tags: docker docker:storage
   when: (docker_manage_engine_storage|bool == true) and
         (docker_engine_storage_driver is defined)
 
-- name: Install docker-py
+- name:  MAIN - Install Docker Python Library
   include: "py/{{ docker_py_install }}.yml"
-  tags: docker docker:py
+  tags: docker docker:py docker:python
   when: (docker_manage_py|bool == true) and
         (docker_py_install is defined)
 
-- name: Install and Configure Docker Engine
+- name:  MAIN - Install and Configure Docker Engine
   include: 'engine/main.yml'
   tags: docker docker:engine
 
-- name: Configure Docker Engine Credentials
+- name:  MAIN - Configure Docker Engine Credentials
   include: 'registry_credentials.yml'
   tags: docker docker:credentials
   when: (docker_manage_registry_credentials|bool == true) and
         (docker_registry_credentials is defined)
 
-- name: Manage Container Networks
+- name:  MAIN - Manage Container Networks
   include: 'container_networks.yml'
   tags: docker docker:networks
   when: (docker_manage_engine_networks|bool == true) and
         (docker_networks is defined)
 
-- name: Manage Container Images
+- name:  MAIN - Manage Container Images
   include: 'container_images.yml'
   tags: docker docker:images
   when: (docker_manage_images|bool == true) and
         (docker_images is defined)
 
-- name: Manage Container Execution
+- name:  MAIN - Manage Container Execution
   include: 'container_execution.yml'
   tags: docker docker:containers
   when: (docker_manage_containers|bool == true) and

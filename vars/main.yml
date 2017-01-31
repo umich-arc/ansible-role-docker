@@ -1,11 +1,5 @@
 ---
 
-# Docker Engine Repo
-# ------------------------------
-docker_engine_repo_cs_gpg_key: '0xEE6D536CF7DC86E2D7D56F59A178AC6C6238F52E'
-docker_engine_repo_os_gpg_key: '0x58118E89F3A912897C070ADBF76221572C52609D'
-
-
 # Docker Engine Storage
 # ------------------------------
 _docker_engine_storage_pkgs:
