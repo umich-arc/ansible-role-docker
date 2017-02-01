@@ -10,7 +10,6 @@ provisioner:
   sudo_command: sudo -E -H
   require_ansible_repo: false
   require_ansible_omnibus: true
-  require_ansible_source: true
   require_chef_for_busser: false
   require_ruby_for_busser: false
   ansible_verbose: true
