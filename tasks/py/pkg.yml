@@ -1,6 +1,6 @@
 ---
 
-- name: Install docker-py package
+- name: PYTHON DOCKER - PKG - Install Python Docker Package
   package: name='{{ _docker_py_pkg[ansible_os_family|lower] }}' state=present
   register: _external_dependency_success
   until: _external_dependency_success|success

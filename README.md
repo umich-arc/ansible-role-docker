@@ -12,7 +12,7 @@ This role manages the install and configuration of the Docker Engine with suppor
 * [Dependencies](#dependencies)
 * [Role Variables](#role-variables)
   * [Execution Control](#execution-control)
-  * [Docker-py](#docker-py)
+  * [Docker Python Library](#docker-python-library)
   * [Docker Engine Repository](#docker-engine-repository)
   * [Docker Engine Storage Configuration](#docker-engine-storage-configuration)
   * [Docker Engine](#docker-engine)
@@ -29,15 +29,13 @@ This role manages the install and configuration of the Docker Engine with suppor
 
 Requirements
 ------------
-This role depends on Ansible 2.1 or greater for full functionality.
-If using the role to manage Docker Networks version 2.2 or higher is required and the network section in `tasks/main.yml` should be uncommented. It will become uncommented by default once Ansible 2.2 becomes more ubiquitous.
-
+This role depends on Ansible 2.2 or greater for full functionality.
 
 
 Dependencies
 ------------
 
-The python library `docker-py` is a requirement for any components of the role outside of installing the Docker-Engine itself. However the role will take care of installing it, if so configured.
+The python library `docker` or `docker-py` is a requirement for any components of the role outside of installing the Docker-Engine itself. However the role will take care of installing the correct version, if so configured.
 
 
 
@@ -52,29 +50,29 @@ Enables or disables specific components of the Docker Role.
 |:------------------------------------:|:-------:|:--------------------------------------------------------------------------------------------------------------------------------------------:|
 |      `external_dependency_delay`     |   `20`  |                               The time in seconds between external dependency retries. (repos, keyservers, etc)                              |
 |     `external_dependency_retries`    |   `6`   |                                      The number of retries to attempt accessing an external dependency.                                      |
-|          `docker_manage_py`          |  `true` |       Installs docker-py, either from repo or pip. **Note:** This is required for container, credential, image and network management.       |
+|          `docker_manage_py`          |  `true` | Installs python docker library, either from repo or pip. **Note:** This is required for container, credential, image and network management. |
 |      `docker_manage_engine_repo`     |  `true` |                  Manages the Docker repo. Provides support for both the Open Source and Commercially Supported Repositories.                 |
 |    `docker_manage_engine_storage`    | `false` | If true, the storage driver for the Docker Engine will be managed by the role. No storage-driver or storage-opt should be supplied manually. |
 |     `docker_manage_engine_users`     |  `true` |                              Creates and manages a docker group that is granted rights to interact with Docker.                              |
-| `docker_manage_registry_credentials` |  `true` |                           Manages the credentials for a supplied list of registries. **Note:** Requires docker-py.                           |
-|    `docker_manage_engine_networks`   |  `true` |                                Enables Management of Docker Container Networks. **Note:** Requires docker-py.                                |
-|        `docker_manage_images`        |  `true` |                                     Manages lifecycle of Container Images. **Note:** Requires docker-py.                                     |
-|      `docker_manage_containers`      |  `true` |                                Enables Management of Docker Container Execution. **Note:** Requires docker-py.                               |
+| `docker_manage_registry_credentials` |  `true` |                           Manages the credentials for a supplied list of registries. **Note:** Requires docker lib.                          |
+|    `docker_manage_engine_networks`   |  `true` |                                Enables Management of Docker Container Networks. **Note:** Requires docker lib.                               |
+|        `docker_manage_images`        |  `true` |                                     Manages lifecycle of Container Images. **Note:** Requires docker lib.                                    |
+|      `docker_manage_containers`      |  `true` |                               Enables Management of Docker Container Execution. **Note:** Requires docker lib.                               |
 
 ----------
 
 
 
-### Docker-py
+### Docker Python Library
 
-Manages the installation of the docker-py libraries.
+Manages the installation of the Python Docker library. if a version is supplied that is `2.0.0` or greater, the older `docker-py` package will be removed and the newer `docker` package installed in it's place.
 
 |          Variable          | Default |      Options      |                                   Description                                  |
 |:--------------------------:|:-------:|:-----------------:|:------------------------------------------------------------------------------:|
 |     `docker_py_install`    |  `pip`  |   `pip` or `pkg`  |                Type of installation. Either from pip or package.               |
 | `docker_py_pip_extra_args` |    -    |         -         | Extra arguments to pass to pip during execution. e.g. `-i <local pypi mirror>` |
 |   `docker_py_pip_upgrade`  |  `true` | `true` or `false` |            Allow for pip to be upgraded during the install process.            |
-|     `docker_py_version`    |    -    |         -         |      The version of the docker-py library to install. Defaults to latest.      |
+|     `docker_py_version`    |    -    |         -         |        The version of the docker library to install. Defaults to latest.       |
 
 ----------
 
@@ -143,7 +141,7 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 |  `docker_engine_storage_driver` |            `devicemapper`           |                                                                           -                                                                          |
 |             `device`            |                  -                  |                           **REQUIRED** The device or partition (e.g. `/dev/sdb`) intended to be used and managed by Docker.                          |
 |            `vg_name`            |             `docker-vg`             |                                                         The name of the Docker Volume Group.                                                         |
-|            `vg_opts`            |                  -                  |                                               Optional paramenters to use during Volume Group creation.                                              |
+|            `vg_opts`            |                  -                  |                                                Optional parameters to use during Volume Group creation.                                              |
 |            `lv_name`            |              `thinpool`             |                                                           The Logical Volume thinpool name.                                                          |
 |          `lv_data_opts`         |         `--wipesignatures y`        |                                            Parameters to pass during creation of the data logical volume.                                            |
 |        `lv_metadata_opts`       |         `--wipesignatures y`        |                                          Parameters to pass during creation of the metadata logical volume.                                          |

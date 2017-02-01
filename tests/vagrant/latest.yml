@@ -1,4 +1,8 @@
 ---
+
+# docker py version has been pinned to prevent breakage with the current
+# stable release of ansible. Docker library 2.0.0+ works with master branch.
+
 - name: docker
   hosts: all
   connection: local
@@ -9,6 +13,7 @@
     - 'docker'
   vars:
     docker_manage_py: true
+    docker_py_version: '1.10.6'
     docker_engine_env_vars:
       DOCKER_HOST: /var/run/docker.sock
       TLS_VERIFY: TRUE

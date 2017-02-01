@@ -1,11 +1,17 @@
 # -*- encoding: utf-8 -*-
 # frozen_string_literal: true
-
+# rubocop:disable Metrics/BlockLength
 require 'spec_helper'
 
 def py_pkgs
   return property['_docker_py_pkg']['debian'] if %w(debian ubuntu).include?(os[:family])
   return property['_docker_py_pkg']['redhat'] if %w(redhat).include?(os[:family])
+end
+
+def py_lib_name
+  return 'docker-py' if property['docker_py_version'] &&
+                        property['docker_py_version'].split('.')[0].to_i < 2
+  'docker'
 end
 
 if property['docker_manage_py']
@@ -14,7 +20,7 @@ if property['docker_manage_py']
       case property['docker_py_install']
       when 'pkg'
         context 'DOCKER:PY:PKG' do
-          describe 'system docker-py package' do
+          describe 'system python docker library' do
             subject { package(py_pkgs) }
             it { is_expected.to be_installed }
           end
@@ -34,8 +40,8 @@ if property['docker_manage_py']
           end
 
           if property['docker_py_version']
-            describe 'The docker-py package version' do
-              subject { command('pip list | grep docker-py') }
+            describe 'The docker library version' do
+              subject { command("pip list | grep #{py_lib_name}") }
               its(:stdout) { is_expected.to match property['docker_py_version'] }
             end
           end
@@ -46,7 +52,7 @@ if property['docker_manage_py']
         verify_command =
           'python -c "import sys, pkgutil;  ' \
           'sys.exit(0) if pkgutil.find_loader(\'docker\') else sys.exit(1)"'
-        describe 'docker-py library should be loadable' do
+        describe 'docker library should be loadable' do
           subject { command(verify_command) }
           its(:exit_status) { is_expected.to eq 0 }
         end
@@ -54,3 +60,5 @@ if property['docker_manage_py']
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength

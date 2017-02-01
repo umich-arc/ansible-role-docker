@@ -3,7 +3,7 @@
 # execution covers a very broad spectrum. Images should be pulled through
 # container_images before running in this section.
 
-- name: Manage Container Exeuction
+- name: EXEC - Manage Container Exeuction
   docker_container:
     api_version: '{{ item.api_version|default(omit) }}'
     blkio_weight: '{{ item.blkio_weight|default(omit) }}'

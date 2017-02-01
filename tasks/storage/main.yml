@@ -1,6 +1,6 @@
 ---
 
-- name: Set Storage Config Facts
+- name: STORAGE - Set Storage Config Facts
   set_fact:
     _des_pkgs: "{{ _docker_engine_storage_pkgs
       [(ansible_distribution|lower ~ '-' ~ ansible_distribution_major_version)]
@@ -11,7 +11,7 @@
       combine(docker_engine_storage_config)
     }}'
 
-- name: Install Storage Prereqs
+- name: STORAGE - Install Storage Prereqs
   package: name='{{ item }}' state=present
   register: _external_dependency_success
   until: _external_dependency_success|success
@@ -19,6 +19,6 @@
   delay: '{{ external_dependency_delay }}'
   with_items: '{{ _des_pkgs|default([]) }}'
 
-- name: Config Storage Driver
+- name: STORAGE - Config Storage Driver
   include: '{{ docker_engine_storage_driver|lower }}.yml'
   when: docker_engine_storage_driver is defined

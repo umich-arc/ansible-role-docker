@@ -2,7 +2,7 @@
 # External dependency management IS done here as this is mostly used
 # for pulling and not building images.
 
-- name: Manage Container Images
+- name: IMAGES - Manage Container Images
   docker_image:
     api_version: '{{ item.api_version|default(omit) }}'
     archive_path: '{{ item.archive_path|default(omit) }}'
