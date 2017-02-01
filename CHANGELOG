@@ -1,2 +1,6 @@
+1.1.1:
+  - Resolve Python Docker Library issue
+  - Rename tasks to be more clear
+
 1.1.0:
   - Add overlay2 storage driver support for Ubuntu 16.04 
