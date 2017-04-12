@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 # frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 
 require 'aws-sdk'
 require 'rake'
@@ -55,14 +56,9 @@ namespace :integration do
       task_runner(config, 'latest', 'test', concurrency)
     end
 
-    desc 'Execute the Vagrant test suite for the Open Source Docker Engine.'
-    task :'os-engine' do
-      task_runner(config, 'os-engine', 'test', concurrency)
-    end
-
-    desc 'Execute the Vagrant test suite for the Commercial Docker Engine.'
-    task :'cs-engine' do
-      task_runner(config, 'cs-engine', 'test', concurrency)
+    desc 'Execute the Vagrant test suite for the Community Edition Docker Engine.'
+    task :'ce-engine' do
+      task_runner(config, 'ce-engine', 'test', concurrency)
     end
 
     desc 'Execute the Vagrant test suite using the OS package for docker-py.'
@@ -121,14 +117,9 @@ namespace :integration do
         task_runner(config, 'latest', 'test', concurrency)
       end
 
-      desc 'Execute the Cloud test suite for the Open Source Docker Engine.'
+      desc 'Execute the Cloud test suite for the Community Edition Docker Engine.'
       task :'os-engine' do
-        task_runner(config, 'os-engine', 'test', concurrency)
-      end
-
-      desc 'Execute the Cloud test suite for the Commercial Docker Engine.'
-      task :'cs-engine' do
-        task_runner(config, 'cs-engine', 'test', concurrency)
+        task_runner(config, 'ce-engine', 'test', concurrency)
       end
 
       desc 'Execute the Cloud test suite using the OS package for docker-py.'
@@ -212,3 +203,5 @@ namespace :integration do
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength

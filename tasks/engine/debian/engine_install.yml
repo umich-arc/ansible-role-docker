@@ -1,7 +1,7 @@
 ---
 
 - name: INSTALL - ENGINE - Install Docker Engine
-  package: name='docker-engine={{ docker_engine_version }}*' state=present
+  package: name='docker-{{ docker_engine_edition }}={{ docker_engine_version }}*' state=present
   register: _external_dependency_success
   until: _external_dependency_success|success
   retries: '{{ external_dependency_retries }}'
@@ -9,7 +9,7 @@
   when: (docker_engine_version is defined) and (docker_engine_version is not none)
 
 - name: INSTALL - ENGINE - Install Latest Docker Engine
-  package: name='docker-engine' state=latest
+  package: name='docker-{{ docker_engine_edition }}' state=latest
   register: _external_dependency_success
   until: _external_dependency_success|success
   retries: '{{ external_dependency_retries }}'

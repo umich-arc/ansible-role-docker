@@ -2,7 +2,8 @@
 
 - name: INSTALL - Configure Docker Engine Repo
   include: '{{ ansible_os_family|lower }}/repo.yml'
-  when: docker_manage_engine_repo|bool == true
+  when: (docker_manage_engine_repo|bool == true) and
+        (docker_engine_edition|lower != 'ee')
 
 - name: INSTALL - Install and Configure Docker Engine
   include: '{{ ansible_os_family|lower }}/engine_install.yml'

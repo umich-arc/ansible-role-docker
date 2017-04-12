@@ -1,9 +1,10 @@
-{%- if docker_engine_commercial_support -%}
-  {%- set version_split = docker_engine_version.split('.') -%}
-  {%- set repo_version = version_split[0] ~ '.' ~ version_split[1] -%}
-  {%- set repo = 'https://packages.docker.com/' ~ repo_version ~ '/apt/repo' -%}
+{%- set arch = docker_engine_architecture -%}
+{%- set repo =  'https://download.docker.com/linux/' ~ ansible_distribution|lower -%}
+{%- set distrib = ansible_distribution_release -%}
+{%- if docker_engine_channel|lower == 'edge' -%}
+  {%- set channel = 'stable edge' -%}
 {%- else -%}
-  {%- set repo = 'https://apt.dockerproject.org/repo' -%}
+  {%- set channel = 'stable' -%}
 {%- endif -%}
 
-deb {{ repo }} {{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }} main
+deb [arch={{ arch }}] {{ repo }} {{ distrib }} {{ channel }}

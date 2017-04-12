@@ -2,15 +2,15 @@
 
 - name: INSTALL - REPO - Test if apt-transport-https is installed
   command: dpkg-query -l apt-transport-https
-  register: prereq_ath
-  changed_when: prereq_ath.rc != 0
-  ignore_errors: True
+  register: _docker_engine_repo_ath
+  changed_when: _docker_engine_repo_ath.rc != 0
+  ignore_errors: true
 
 - name: INSTALL - REPO - Test if ca-certificates is installed
   command: dpkg-query -l ca-certificates
-  register: prereq_cc
-  changed_when: prereq_cc.rc != 0
-  ignore_errors: True
+  register: _docker_engine_repo_cc
+  changed_when: _docker_engine_repo_cc.rc != 0
+  ignore_errors: true
 
 - name: INSTALL - REPO - Update Apt Cache
   apt: update_cache=yes
@@ -18,7 +18,8 @@
   until: _external_dependency_success|success
   retries: '{{ external_dependency_retries }}'
   delay: '{{ external_dependency_delay }}'
-  when: (prereq_ath.rc != 0) or (prereq_cc.rc != 0)
+  when: (_docker_engine_repo_ath.rc != 0) or
+        (_docker_engine_repo_cc.rc != 0)
 
 - name: INSTALL - REPO - Install Repo prereqs
   apt: name='{{ item }}'
@@ -29,27 +30,19 @@
   with_items:
     - apt-transport-https
     - ca-certificates
-  when: (prereq_ath.rc != 0) or (prereq_cc.rc != 0)
+  when: (_docker_engine_repo_ath.rc != 0) or
+        (_docker_engine_repo_cc.rc != 0)
 
-- name: INSTALL - REPO - Add Docker CS Repo GPG key
+- name: INSTALL - REPO - Add Docker CE Repo GPG key
   apt_key:
     keyserver: '{{ docker_engine_repo_gpg_key_server }}'
-    id: '{{ docker_engine_repo_cs_gpg_key }}'
+    id: '{{ docker_engine_repo_ce_deb_gpg_key }}'
   register: _external_dependency_success
   until: _external_dependency_success|success
   retries: '{{ external_dependency_retries }}'
   delay: '{{ external_dependency_delay }}'
-  when: docker_engine_commercial_support|bool == true
-
-- name: INSTALL - REPO - Add Docker Open Source Repo GPG key
-  apt_key:
-    keyserver: '{{ docker_engine_repo_gpg_key_server }}'
-    id: '{{ docker_engine_repo_os_gpg_key }}'
-  register: _external_dependency_success
-  until: _external_dependency_success|success
-  retries: '{{ external_dependency_retries }}'
-  delay: '{{ external_dependency_delay }}'
-  when: not docker_engine_commercial_support|bool == true
+  when: (docker_engine_edition|lower != 'enterprise') and
+        (docker_engine_edition|lower != 'ee')
 
 - name: INSTALL - REPO - Add Docker Repo
   template:
@@ -58,7 +51,7 @@
     owner: root
     group: root
     mode: '0644'
-  register: update_apt_cache
+  register: _docker_engine_repo_apt_cache
 
 - name: INSTALL - REPO - Update Cache to Add Docker Repo
   apt: update_cache=yes
@@ -66,4 +59,4 @@
   until: _external_dependency_success|success
   retries: '{{ external_dependency_retries }}'
   delay: '{{ external_dependency_delay }}'
-  when: update_apt_cache.changed
+  when: _docker_engine_repo_apt_cache.changed

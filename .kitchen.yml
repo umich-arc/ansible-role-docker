@@ -9,15 +9,22 @@ provisioner:
   role_name: docker-engine
   sudo_command: sudo -E -H
   require_ansible_repo: false
-  require_ansible_omnibus: true
+  require_ansible_omnibus: false
   require_chef_for_busser: false
   require_ruby_for_busser: false
+# disabled omnibus and switched to pip install to workaround python-six related
+# dependency issues on Ubuntu 14.04
+  require_pip: true
+  ansible_version: 2.3.0
   ansible_verbose: true
   ansible_verbosity: warn
   idempotency_test: true
 
 verifier:
   name: shell
+
+transport:
+  max_ssh_sessions: 4
 
 suites:
   - name: latest
@@ -26,20 +33,11 @@ suites:
     verifier:
       command: PLAYBOOK=tests/vagrant/latest.yml bundle exec rspec -c -f d -I serverspec
 
-  - name: os-engine
+  - name: ce-engine
     provisioner:
-      playbook: tests/vagrant/os-engine.yml
+      playbook: tests/vagrant/ce-engine.yml
     verifier:
-      command: PLAYBOOK=tests/vagrant/os-engine.yml bundle exec rspec -c -f d -I serverspec
-
-  - name: cs-engine
-    excludes:
-      - debian-8
-      - ubuntu-1604
-    provisioner:
-      playbook: tests/vagrant/cs-engine.yml
-    verifier:
-      command: PLAYBOOK=tests/vagrant/cs-engine.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/vagrant/ce-engine.yml bundle exec rspec -c -f d -I serverspec
 
   - name: py-pkg
     excludes:
@@ -124,13 +122,13 @@ suites:
 platforms:
   - name: centos-7
     driver_config:
-      box: bento/centos-7.2
-      box_url: https://atlas.hashicorp.com/bento/boxes/centos-7.2
+      box: bento/centos-7.3
+      box_url: https://atlas.hashicorp.com/bento/boxes/centos-7.3
 
   - name: debian-8
     driver_config:
-      box: bento/debian-8.6
-      box_url: https://atlas.hashicorp.com/bento/debian-8.6
+      box: bento/debian-8.7
+      box_url: https://atlas.hashicorp.com/bento/debian-8.7
 
   - name: ubuntu-1404
     driver_config:

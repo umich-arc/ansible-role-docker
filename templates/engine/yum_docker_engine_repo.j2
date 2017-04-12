@@ -1,15 +1,65 @@
-{%- if docker_engine_commercial_support -%}
-  {%- set repo_version = docker_engine_version.split('.') -%}
-  {%- set baseurl = 'https://packages.docker.com/' ~ repo_version[0] ~ '.' ~ repo_version[1] ~ '/yum/repo/main/centos/' ~ ansible_distribution_major_version -%}
-  {%- set gpg_key =  'https://' ~ docker_engine_repo_gpg_key_server ~ '/pks/lookup?op=get&search=' ~ docker_engine_repo_cs_gpg_key -%}
-{%- else -%}
-  {%- set baseurl = 'https://yum.dockerproject.org/repo/main/centos/' ~ ansible_distribution_major_version -%}
-  {%- set gpg_key = 'https://' ~ docker_engine_repo_gpg_key_server ~ '/pks/lookup?op=get&search=' ~ docker_engine_repo_os_gpg_key -%}
-{%- endif -%}
+{#- original from here - https://download.docker.com/linux/centos/docker-ce.repo -#}
+{%- set gpg_key = 'https://' ~ docker_engine_repo_gpg_key_server ~ '/pks/lookup?op=get&search=' ~ docker_engine_repo_ce_rpm_gpg_key -%}
 
-[docker]
-name=Docker Repository
-baseurl={{ baseurl }}
+[docker-ce-stable]
+name=Docker CE Stable - $basearch
+baseurl=https://download.docker.com/linux/centos/7/$basearch/stable
 enabled=1
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-stable-debuginfo]
+name=Docker CE Stable - Debuginfo $basearch
+baseurl=https://download.docker.com/linux/centos/7/debug-$basearch/stable
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-stable-source]
+name=Docker CE Stable - Sources
+baseurl=https://download.docker.com/linux/centos/7/source/stable
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-edge]
+name=Docker CE Edge - $basearch
+baseurl=https://download.docker.com/linux/centos/7/$basearch/edge
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-edge-debuginfo]
+name=Docker CE Edge - Debuginfo $basearch
+baseurl=https://download.docker.com/linux/centos/7/debug-$basearch/edge
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-edge-source]
+name=Docker CE Edge - Sources
+baseurl=https://download.docker.com/linux/centos/7/source/edge
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-test]
+name=Docker CE Test - $basearch
+baseurl=https://download.docker.com/linux/centos/7/$basearch/test
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-test-debuginfo]
+name=Docker CE Test - Debuginfo $basearch
+baseurl=https://download.docker.com/linux/centos/7/debug-$basearch/test
+enabled=0
+gpgcheck=1
+gpgkey={{ gpg_key }}
+
+[docker-ce-test-source]
+name=Docker CE Test - Sources
+baseurl=https://download.docker.com/linux/centos/7/source/test
+enabled=0
 gpgcheck=1
 gpgkey={{ gpg_key }}

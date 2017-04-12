@@ -31,9 +31,13 @@ provisioner:
   hosts: docker-hosts
   role_name: docker-engine
   require_ansible_repo: false
-  require_ansible_omnibus: true
+  require_ansible_omnibus: false
   require_chef_for_busser: false
   require_ruby_for_busser: false
+# disabled omnibus and switched to pip install to workaround python-six related
+# dependency issues on Ubuntu 14.04
+  require_pip: true
+  ansible_version: 2.3.0
   ansible_verbose: false
   ansible_verbosity: warn
   idempotency_test: true
@@ -50,20 +54,11 @@ suites:
     verifier:
       command: PLAYBOOK=tests/vagrant/latest.yml bundle exec rspec -c -f d -I serverspec
 
-  - name: os-engine
+  - name: ce-engine
     provisioner:
-      playbook: tests/cloud/os-engine.yml
+      playbook: tests/cloud/ce-engine.yml
     verifier:
-      command: PLAYBOOK=tests/cloud/os-engine.yml bundle exec rspec -c -f d -I serverspec
-
-  - name: cs-engine
-    excludes:
-      - debian-8
-      - ubuntu-16.04
-    provisioner:
-      playbook: tests/cloud/cs-engine.yml
-    verifier:
-      command: PLAYBOOK=tests/cloud/cs-engine.yml bundle exec rspec -c -f d -I serverspec
+      command: PLAYBOOK=tests/cloud/ce-engine.yml bundle exec rspec -c -f d -I serverspec
 
   - name: py-pkg
     excludes:

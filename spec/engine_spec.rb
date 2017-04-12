@@ -1,16 +1,12 @@
 # -*- encoding: utf-8 -*-
 # frozen_string_literal: true
+# rubocop:disable Metrics/BlockLength
 
 require 'spec_helper'
 
 def engine_repo_conf
   return '/etc/yum.repos.d/Docker.repo' if %w(redhat).include?(os[:family])
   return '/etc/apt/sources.list.d/docker.list' if %w(debian ubuntu).include?(os[:family])
-end
-
-def which_repo?
-  return 'packages.docker.com' if property['docker_engine_commercial_support']
-  'dockerproject.org'
 end
 
 def which_process?
@@ -32,14 +28,13 @@ RSpec.describe ENV['KITCHEN_INSTANCE'] || host_inventory['hostname'] do
           it { is_expected.to be_owned_by 'root' }
           it { is_expected.to be_grouped_into 'root' }
           it { is_expected.to be_mode 644 }
-          its(:content) { is_expected.to match which_repo? }
         end
       end
     end
 
     context 'DOCKER:ENGINE:INSTALL' do
       describe 'The docker engine package' do
-        subject { package('docker-engine') }
+        subject { package("docker-#{property['docker_engine_edition']}") }
         it { is_expected.to be_installed }
 
         if property['docker_engine_version']
@@ -91,3 +86,5 @@ RSpec.describe ENV['KITCHEN_INSTANCE'] || host_inventory['hostname'] do
     end
   end
 end
+
+# rubocop:enable Metrics/BlockLength
