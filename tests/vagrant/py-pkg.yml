@@ -10,7 +10,7 @@
   vars:
     docker_manage_py: true
     docker_py_install: pkg
-    docker_engine_version: '1.12.3'
+    docker_engine_version: '17.03.1'
     docker_engine_env_vars:
       DOCKER_HOST: /var/run/docker.sock
       TLS_VERIFY: TRUE

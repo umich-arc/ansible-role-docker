@@ -1,6 +1,11 @@
+2.0.0:
+  - OS/CS editions renamed to CE/EE (community and enterprise edition)
+  - Support REMOVED for Enterprise Edition Repo Management
+  - Support added for armhf (Debian / Ubuntu only)
+
 1.1.1:
   - Resolve Python Docker Library issue
   - Rename tasks to be more clear
 
 1.1.0:
-  - Add overlay2 storage driver support for Ubuntu 16.04 
+  - Add overlay2 storage driver support for Ubuntu 16.04

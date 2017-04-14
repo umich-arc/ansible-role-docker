@@ -14,7 +14,7 @@ _docker_engine_storage_pkgs:
     aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
     btrfs: [ 'btrfs-tools']
   ubuntu-16:
-    aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
+    aufs: [ 'aufs-tools' ]
     btrfs: [ 'btrfs-tools']
     overlay: []
     overlay2: []

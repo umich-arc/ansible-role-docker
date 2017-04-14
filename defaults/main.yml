@@ -76,16 +76,21 @@ docker_py_version:
 # Package and Repo Options
 # ------------------------------
 #
-# docker_engine_commercial_support: Use the Commercially Supported Docker
-#   Engine instead of Open Source.
+# docker_engine_architecture: Specifies intended architecture. NOTE: armhf is ONLY supported on
+#   Ubuntu and Debian based distros.
+# docker_engine_channel: Specifies whether to use the stable or edge release channel.
+# docker_engine_edition: which docker edition to use, enterprise (ee) or community (ce)
 # docker_engine_repo_gpg_key_server: The keyserver to query the public gpg keys.
-# docker_engine_repo_cs_gpg_key: The gpg key used for the commercial docker Repo
-# docker_engine_repo_os_gpg_key: The gpg key used for the Open Source docker Repo
+# docker_engine_repo_ce_deb_gpg_key: The gpg key used for the CE deb based repository.
+# docker_engine_repo_ce_rpm_gpg_key: The gpg key used for the CE rpm based repository.
 
-docker_engine_commercial_support: False
+docker_engine_architecture: amd64
+docker_engine_channel: stable
+docker_engine_edition: ce
 docker_engine_repo_gpg_key_server: sks-keyservers.net
-docker_engine_repo_cs_gpg_key: '0xEE6D536CF7DC86E2D7D56F59A178AC6C6238F52E'
-docker_engine_repo_os_gpg_key: '0x58118E89F3A912897C070ADBF76221572C52609D'
+docker_engine_repo_ce_deb_gpg_key: '0x8D81803C0EBFCD88'
+docker_engine_repo_ce_rpm_gpg_key: '0xc52feb6b621e9f35'
+
 
 
 # ------------------------------

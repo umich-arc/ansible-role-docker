@@ -31,11 +31,17 @@ Requirements
 ------------
 This role depends on Ansible 2.2 or greater for full functionality.
 
+**NOTE:** Version `2.x.x` and above of this role **ONLY** supports the `YY.MM` style release schema (e.g. `docker-ce-17.03.1`). For older releases (e.g. `docker-engine-1.13.1`) please use the `1.x.x` version of this role.
+
+**NOTE:** [Docker Inc.](https://docker.com) no longer uses publicly accessible repos for their Enterprise Edition. With version `2.0.0` of this role, support for enterprise repo management has been removed. However, it is still capable of managing and installing Enterprise Edition.
+
 
 Dependencies
 ------------
 
 The python library `docker` or `docker-py` is a requirement for any components of the role outside of installing the Docker-Engine itself. However the role will take care of installing the correct version, if so configured.
+
+**NOTE:** As of 4/13/2017 Ansible does not support the 2.0.2+ python library. Support is slated for the Ansible 2.4 release. For further information, please see the GitHub Issue here: https://github.com/ansible/ansible/issues/22993
 
 
 
@@ -82,12 +88,14 @@ Manages the installation of the Python Docker library. if a version is supplied 
 
 Controls the repository configuration of the Docker Engine.
 
-|            Variable Name            |                    Default                   |      Options      |                             Description                             |
-|:-----------------------------------:|:--------------------------------------------:|:-----------------:|:-------------------------------------------------------------------:|
-|  `docker_engine_commercial_support` |                    `false`                   | `true` or `false` |      Use the Open Source or Commercially managed Docker Engine.     |
-| `docker_engine_repo_gpg_key_server` |             `sks-keyservers.net`             |         -         | The keyserver to use for the validation of the repository gpg keys. |
-|   `docker_engine_repo_cs_gpg_key`   | `0xEE6D536CF7DC86E2D7D56F59A178AC6C6238F52E` |         -         |           The gpg key used for the Commercial Docker Repo.          |
-|   `docker_engine_repo_os_gpg_key`   | `0x58118E89F3A912897C070ADBF76221572C52609D` |         -         |          The gpg key used for the Open Source Docker Repo.          |
+|            Variable Name            |        Default       |       Options      |                                                                                   Description                                                                                   |
+|:-----------------------------------:|:--------------------:|:------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|     `docker_engine_architecture`    |        `amd64`       | `amd64` or `armhf` |                                     Specifies intended architecture. **NOTE:** `armhf` is ONLY supported on Ubuntu and Debian based distros.                                    |
+|       `docker_engine_channel`       |       `stable`       | `stable` or `edge` | Specifies whether to use the `stable` or `edge` release channel. For more information see the [Docker Installation Documentation](https://docs.docker.com/engine/installation/) |
+|       `docker_engine_edition`       |         `ce`         |    `ce` or `ee`    |                          Use the Community Edition(CE) or Enterprise Edition(EE). **NOTE:** Enterprise Edition repo **CANNOT** be managed by the role.                          |
+| `docker_engine_repo_gpg_key_server` | `sks-keyservers.net` |          -         |                                                       The keyserver to use for the validation of the repository gpg keys.                                                       |
+| `docker_engine_repo_ce_deb_gpg_key` | `0x8D81803C0EBFCD88` |          -         |                                                                The gpg key used for the CE deb based repository.                                                                |
+| `docker_engine_repo_ce_rpm_gpg_key` | `0xc52feb6b621e9f35` |          -         |                                                                The gpg key used for the CE rpm based repository.                                                                |
 
 ----------
 
@@ -103,7 +111,7 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 
 |                           | aufs | btrfs | devicemapper (lvm-direct) | overlay | overlay2 |
 |:-------------------------:|:----:|:-----:|:-------------------------:|:-------:|:--------:|
-|       **CentOS 7.2**      |   -  |   x   |             x             |    x    |     -    |
+|       **CentOS 7.3**      |   -  |   x   |             x             |    x    |     -    |
 |   **Debian 8 (Jessie)**   |   x  |   x   |             -             |    -    |     -    |
 | **Ubuntu 14.04 (Trusty)** |   x  |   x   |             -             |    -    |     -    |
 | **Ubuntu 16.04 (Xenial)** |   x  |   x   |             -             |    x    |     x    |
