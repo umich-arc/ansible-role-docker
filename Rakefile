@@ -118,7 +118,7 @@ namespace :integration do
       end
 
       desc 'Execute the Cloud test suite for the Community Edition Docker Engine.'
-      task :'os-engine' do
+      task :'ce-engine' do
         task_runner(config, 'ce-engine', 'test', concurrency)
       end
 

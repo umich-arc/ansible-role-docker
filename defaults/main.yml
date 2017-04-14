@@ -76,12 +76,13 @@ docker_py_version:
 # Package and Repo Options
 # ------------------------------
 #
+# docker_engine_architecture: Specifies intended architecture. NOTE: armhf is ONLY supported on
+#   Ubuntu and Debian based distros.
+# docker_engine_channel: Specifies whether to use the stable or edge release channel.
 # docker_engine_edition: which docker edition to use, enterprise (ee) or community (ce)
 # docker_engine_repo_gpg_key_server: The keyserver to query the public gpg keys.
-# docker_engine_repo_ce_deb_gpg_key:
-# docker_engine_repo_ce_rpm_gpg_key:
-# docker_engine_repo_ee_deb_gpg_key:
-# docker_engine_repo_ee_rpm_gpg_key:
+# docker_engine_repo_ce_deb_gpg_key: The gpg key used for the CE deb based repository.
+# docker_engine_repo_ce_rpm_gpg_key: The gpg key used for the CE rpm based repository.
 
 docker_engine_architecture: amd64
 docker_engine_channel: stable
