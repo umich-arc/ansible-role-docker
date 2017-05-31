@@ -10,6 +10,10 @@ _docker_engine_storage_pkgs:
   debian-8:
     aufs: [ 'aufs-tools' ]
     btrfs: [ 'btrfs-tools' ]
+  redhat-7:
+    devicemapper: [ 'lvm2' ]
+    btrfs: [ 'btrfs-progs' ]
+    overlay: []
   ubuntu-14:
     aufs: [ 'linux-image-extra-{{ ansible_kernel }}', 'aufs-tools' ]
     btrfs: [ 'btrfs-tools']
