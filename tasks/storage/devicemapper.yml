@@ -29,7 +29,7 @@
 
 - name: STORAGE - DEVICEMAPPER - Convert Volume To Thinpool
   command: >
-    lvconvert -y --zero n -c 512K
+    /usr/sbin/lvconvert -y --zero n -c 512K
     --thinpool '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
     --poolmetadata '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}_metadata'
   when: (_des_lv_data.changed) and (_des_lv_metadata.changed)
@@ -48,7 +48,7 @@
 
 - name: STORAGE - DEVICEMAPPER - Configure Volume Metadata Profile
   command: >
-    lvchange --metadataprofile docker-thinpool
+    /usr/sbin/lvchange --metadataprofile docker-thinpool
     '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
   when: _des_thinpool_profile.changed
 
