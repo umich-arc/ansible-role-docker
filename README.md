@@ -1,6 +1,6 @@
 # Ansible Role: Docker
 
-This role manages the install and configuration of the Docker Engine with support for credential management and custom storage provisioning. It has been tested with CentOS 7.2, Debian Jessie, Ubuntu Trusty, and Ubuntu Xenial.
+This role manages the install and configuration of the Docker Engine with support for credential management and custom storage provisioning. It has been tested with CentOS 7.3, Debian Jessie, Ubuntu Trusty, and Ubuntu Xenial. RHEL 7.x is loosely supported.
 
 [![Build Status](https://travis-ci.org/arc-ts/ansible-role-docker.svg?branch=master)](https://travis-ci.org/arc-ts/ansible-role-docker)
 
@@ -113,6 +113,7 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 |:-------------------------:|:----:|:-----:|:-------------------------:|:-------:|:--------:|
 |       **CentOS 7.3**      |   -  |   x   |             x             |    x    |     -    |
 |   **Debian 8 (Jessie)**   |   x  |   x   |             -             |    -    |     -    |
+|        **RHEL 7.3**       |   -  |   x   |             x             |    x    |     -    |
 | **Ubuntu 14.04 (Trusty)** |   x  |   x   |             -             |    -    |     -    |
 | **Ubuntu 16.04 (Xenial)** |   x  |   x   |             -             |    x    |     x    |
 
@@ -144,6 +145,10 @@ Manages the Docker Engine storage driver, and in certain circumstances the stora
 
 
 #### devicemapper (lvm-direct)
+
+**NOTE:** Not all errors are captured correctly during thinpool creation. There is a verification task that short-circuits the run at the end of lvm configuration if it detected as not being properly set. For the role to be re-run again, the lvm volume group must be manually removed (`vgremove <vgname>`). This is an intentional behaviour to prevent any sort of accidental data loss.
+
+
 |          Variable Name          |               Default               |                                                                      Description                                                                     |
 |:-------------------------------:|:-----------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------:|
 |  `docker_engine_storage_driver` |            `devicemapper`           |                                                                           -                                                                          |
