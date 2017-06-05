@@ -1,3 +1,6 @@
+2.0.1:
+  - Add support for RHEL 7.x
+
 2.0.0:
   - OS/CS editions renamed to CE/EE (community and enterprise edition)
   - Support REMOVED for Enterprise Edition Repo Management
