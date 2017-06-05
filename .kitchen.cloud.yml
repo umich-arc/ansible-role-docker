@@ -23,7 +23,7 @@ transport:
   ssh_key: <%= ENV['KITCHEN_SSH_KEY'] %>
   connection_timeout: 120
   connection_retries: 10
-  max_ssh_sessions: 4
+  max_ssh_sessions: 2
 
 
 provisioner:

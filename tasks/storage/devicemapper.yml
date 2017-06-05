@@ -27,9 +27,10 @@
   register: _des_lv_metadata
   when: _des_vg.changed
 
+
 - name: STORAGE - DEVICEMAPPER - Convert Volume To Thinpool
   command: >
-    lvconvert -y --zero n -c 512K
+    /usr/sbin/lvconvert -y --zero n -c 512K
     --thinpool '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
     --poolmetadata '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}_metadata'
   when: (_des_lv_data.changed) and (_des_lv_metadata.changed)
@@ -48,9 +49,21 @@
 
 - name: STORAGE - DEVICEMAPPER - Configure Volume Metadata Profile
   command: >
-    lvchange --metadataprofile docker-thinpool
-    '{{ _des_config.vg_name }}/{{ _des_config.lv_name }}'
+    /usr/sbin/lvchange --metadataprofile docker-thinpool
+    '{{ _des_config.vg_name }}'
   when: _des_thinpool_profile.changed
+
+- name: STORAGE - DEVICEMAPPER - Verify LVM Configuration
+  command: >
+    lvs --noheadings --separator / -o Layout,lvprofile '{{ _des_config.vg_name }}'
+  register: _des_lvm_verify
+  changed_when: False
+
+- fail:
+    msg: >
+      Uncaptured error encountered during thinpool creation.
+      Please remove the volume group before executing the role again.
+  when: _des_lvm_verify.stdout|trim != "thin,pool/docker-thinpool"
 
 - name: STORAGE - DEVICEMAPPER - Set Thinpool Mapper Volume Name
   set_fact:
